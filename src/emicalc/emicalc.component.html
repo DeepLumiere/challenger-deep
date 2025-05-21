@@ -1,0 +1,88 @@
+<!-- EMI Calculator Component Template -->
+<div class="emi-calculator-container">
+  <!-- Left Column: EMI Form -->
+  <div class="main-content">
+    <mat-card class="emi-card">
+      <mat-card-header>
+        <mat-card-title class="text-3xl font-bold text-center mb-4">EMI Calculator</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="emiForm" (ngSubmit)="calculate()">
+          <div class="input-section">
+            <!-- Principal Input -->
+            <mat-form-field appearance="outline" class="w-full mb-4">
+              <mat-label>Borrowing (Principal Amount)</mat-label>
+              <input matInput type="number" formControlName="principal" placeholder="e.g., 250000">
+              <mat-error *ngIf="emiForm.controls['principal'].hasError('required')">Principal is required</mat-error>
+              <mat-error *ngIf="emiForm.controls['principal'].hasError('min')">Principal must be positive</mat-error>
+            </mat-form-field>
+
+            <!-- Interest Rate Input -->
+            <mat-form-field appearance="outline" class="w-full mb-4">
+              <mat-label>Interest Rate (Annual %)</mat-label>
+              <input matInput type="number" formControlName="interest" placeholder="e.g., 5.30">
+              <mat-error *ngIf="emiForm.controls['interest'].hasError('required')">Interest rate is required</mat-error>
+              <mat-error *ngIf="emiForm.controls['interest'].hasError('min')">Interest rate must be positive</mat-error>
+            </mat-form-field>
+
+            <!-- Time Period Input -->
+            <mat-form-field appearance="outline" class="w-full mb-4">
+              <mat-label>Time Period (Years)</mat-label>
+              <input matInput type="number" formControlName="years" placeholder="e.g., 5">
+              <mat-error *ngIf="emiForm.controls['years'].hasError('required')">Years is required</mat-error>
+              <mat-error *ngIf="emiForm.controls['years'].hasError('min')">Years must be at least 1</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Submit Button -->
+          <button mat-raised-button color="primary" type="submit" [disabled]="emiForm.invalid" class="w-full mt-4 calculate-button">
+            Calculate EMI
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Right Column: Results and Graph -->
+  <div *ngIf="emiResult !== null" class="graph-section">
+    <mat-card class="emi-card">
+      <mat-card-header>
+        <mat-card-title class="text-2xl font-bold text-center mb-4">How Much Will I Owe In The Future?</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Results Section -->
+        <div class="results-section mt-8">
+          <h2 class="text-2xl font-semibold text-center mb-4">Your Payments Will Be:</h2>
+          <div class="result-box">
+            <span class="text-5xl font-extrabold text-blue-400">
+              ${{ emiResult | number:'1.2-2' }}
+            </span>
+            <span class="text-xl text-gray-400">monthly</span>
+          </div>
+
+          <div class="summary-details mt-6">
+            <div class="detail-item">
+              <span class="detail-label">Total Amount Paid:</span>
+              <span class="detail-value">${{ totalAmountPaid | number:'1.2-2' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Total Interest Paid:</span>
+              <span class="detail-value">${{ totalInterest | number:'1.2-2' }}</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-gray-500 text-center mt-4">
+            Calculations assume monthly compounding interest.
+          </p>
+        </div>
+      </mat-card-content>
+
+      <!-- Chart Section -->
+      <mat-card-content>
+        <div class="graph-container">
+          <canvas #amortizationChart></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
