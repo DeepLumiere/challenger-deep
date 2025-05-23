@@ -1,88 +1,68 @@
-<!-- EMI Calculator Component Template -->
-<div class="emi-calculator-container">
-  <!-- Left Column: EMI Form -->
-  <div class="main-content">
-    <mat-card class="emi-card">
-      <mat-card-header>
-        <mat-card-title class="text-3xl font-bold text-center mb-4">EMI Calculator</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form [formGroup]="emiForm" (ngSubmit)="calculate()">
-          <div class="input-section">
-            <!-- Principal Input -->
-            <mat-form-field appearance="outline" class="w-full mb-4">
-              <mat-label>Borrowing (Principal Amount)</mat-label>
-              <input matInput type="number" formControlName="principal" placeholder="e.g., 250000">
-              <mat-error *ngIf="emiForm.controls['principal'].hasError('required')">Principal is required</mat-error>
-              <mat-error *ngIf="emiForm.controls['principal'].hasError('min')">Principal must be positive</mat-error>
-            </mat-form-field>
+<div class="emi-container">
+  <div class="emi-main-card">
+    <div class="p-grid p-nogutter flex flex-col md:flex-row">
+      <div class="p-col-12 md:p-col-4 emi-input-section">
+        <h2 class="emi-section-title">Enter Loan Details</h2>
+        <form [formGroup]="emiForm" (ngSubmit)="calculate()" class="p-fluid space-y-6">
 
-            <!-- Interest Rate Input -->
-            <mat-form-field appearance="outline" class="w-full mb-4">
-              <mat-label>Interest Rate (Annual %)</mat-label>
-              <input matInput type="number" formControlName="interest" placeholder="e.g., 5.30">
-              <mat-error *ngIf="emiForm.controls['interest'].hasError('required')">Interest rate is required</mat-error>
-              <mat-error *ngIf="emiForm.controls['interest'].hasError('min')">Interest rate must be positive</mat-error>
-            </mat-form-field>
-
-            <!-- Time Period Input -->
-            <mat-form-field appearance="outline" class="w-full mb-4">
-              <mat-label>Time Period (Years)</mat-label>
-              <input matInput type="number" formControlName="years" placeholder="e.g., 5">
-              <mat-error *ngIf="emiForm.controls['years'].hasError('required')">Years is required</mat-error>
-              <mat-error *ngIf="emiForm.controls['years'].hasError('min')">Years must be at least 1</mat-error>
-            </mat-form-field>
+          <div class="p-field">
+            <label for="principal">Borrowing (Principal Amount)</label>
+            <p-inputNumber id="principal" formControlName="principal" mode="currency" currency="USD" locale="en-US" [min]="1"></p-inputNumber>
+            <small *ngIf="emiForm.controls['principal'].invalid && (emiForm.controls['principal'].dirty || emiForm.controls['principal'].untouched)" class="p-error">
+              Please enter a valid amount.
+            </small>
           </div>
 
-          <!-- Submit Button -->
-          <button mat-raised-button color="primary" type="submit" [disabled]="emiForm.invalid" class="w-full mt-4 calculate-button">
+          <div class="p-field">
+            <label for="interest">Annual Interest Rate (%)</label>
+            <p-inputNumber id="interest" formControlName="interest" suffix="%" [min]="0.01" [max]="100" [step]="0.1"></p-inputNumber>
+            <small *ngIf="emiForm.controls['interest'].invalid && (emiForm.controls['interest'].dirty || emiForm.controls['interest'].untouched)" class="p-error">
+              Valid interest is required.
+            </small>
+          </div>
+
+          <div class="p-field">
+            <label for="years">Loan Term (Years): {{ emiForm.controls['years'].value }}</label>
+            <p-slider id="years" formControlName="years" [min]="1" [max]="100"></p-slider>
+            <small *ngIf="emiForm.controls['years'].invalid && (emiForm.controls['years'].dirty || emiForm.controls['years'].untouched)" class="p-error">
+              Enter at least 1 year.
+            </small>
+          </div>
+
+          <button pButton type="submit" [disabled]="emiForm.invalid" class="p-button">
             Calculate EMI
           </button>
         </form>
-      </mat-card-content>
-    </mat-card>
+      </div>
+
+      <div *ngIf="emiResult !== null" class="p-col-12 md:p-col-8 emi-output-section">
+        <h2 class="emi-section-title">Loan Summary</h2>
+
+        <div class="emi-result-display">
+          <p class="emi-label">Your Monthly Payment</p>
+          <p class="emi-value">${{ emiResult | number:'1.2-2' }}</p>
+          <p class="emi-note">Calculated with monthly compounding</p>
+        </div>
+
+        <div class="emi-summary-details">
+          <div class="emi-summary-item">
+            <span>Total Amount Paid:</span>
+            <span class="emi-total-amount">₹{{ totalAmountPaid | number:'1.2-2' }}</span>
+          </div>
+          <div class="emi-summary-item">
+            <span>Total Interest Paid:</span>
+            <span class="emi-total-interest">₹{{ totalInterest | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Right Column: Results and Graph -->
-  <div *ngIf="emiResult !== null" class="graph-section">
-    <mat-card class="emi-card">
-      <mat-card-header>
-        <mat-card-title class="text-2xl font-bold text-center mb-4">How Much Will I Owe In The Future?</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <!-- Results Section -->
-        <div class="results-section mt-8">
-          <h2 class="text-2xl font-semibold text-center mb-4">Your Payments Will Be:</h2>
-          <div class="result-box">
-            <span class="text-5xl font-extrabold text-blue-400">
-              ${{ emiResult | number:'1.2-2' }}
-            </span>
-            <span class="text-xl text-gray-400">monthly</span>
-          </div>
+  <p-card *ngIf="emiResult !== null" styleClass="emi-graph-card">
+    <div class="emi-chart-container">
+      <h2 class="emi-section-title chart-title">Amortization Schedule</h2>
+      <canvas #amortizationChart></canvas>
+    </div>
+  </p-card>
 
-          <div class="summary-details mt-6">
-            <div class="detail-item">
-              <span class="detail-label">Total Amount Paid:</span>
-              <span class="detail-value">${{ totalAmountPaid | number:'1.2-2' }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Total Interest Paid:</span>
-              <span class="detail-value">${{ totalInterest | number:'1.2-2' }}</span>
-            </div>
-          </div>
-
-          <p class="text-xs text-gray-500 text-center mt-4">
-            Calculations assume monthly compounding interest.
-          </p>
-        </div>
-      </mat-card-content>
-
-      <!-- Chart Section -->
-      <mat-card-content>
-        <div class="graph-container">
-          <canvas #amortizationChart></canvas>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
 </div>

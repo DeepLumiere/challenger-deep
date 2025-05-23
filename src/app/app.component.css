@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #121212;
+  color: #810081;
+}
+
+p-menubar {
+  background-color: #1e1e1e !important;
+  color: #810081 !important;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+p-menubar a {
+  display: flex;
+  align-items: center;
+  color: #e0e0e0 !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+p-menubar img {
+  height: 64px;
+  margin-right: 10px;
+}
+
+main {
+  flex: 1 0 auto;
+  padding: 1.5rem;
+  background-color: #181818;
+  color: #e0e0e0;
+}
+
+footer.footer {
+  flex-shrink: 0;
+  background-color: #810081;
+  color: #eeeeee;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  p-menubar a {
+    font-size: 1rem;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  footer.footer {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,147 @@
+.projects-container {
+  background-color: #181818; /* Deep dark background */
+  color: #e0e0e0; /* Light text for contrast */
+  min-height: 100vh;
+  padding: 40px 20px; /* Overall padding for the page */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.projects-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white; /* Brighter purple for the main title */
+  margin-bottom: 50px;
+  text-align: center;
+  border-bottom: 2px solid white;
+  padding-bottom: 15px;
+  width: 100%;
+  max-width: 800px; /* Limit title width */
+}
+
+/* Grid for cards */
+.p-grid {
+  width: 100%;
+  max-width: 1200px; /* Max width for the card grid */
+  margin-left: -1rem; /* Counteract default p-grid horizontal margin */
+  margin-right: -1rem; /* Counteract default p-grid horizontal margin */
+  justify-content: center; /* Center the grid items */
+}
+
+.p-col-12, .p-md-6, .p-lg-4 {
+  padding: 1rem; /* Padding around each grid item */
+  /* These PrimeFlex classes control width based on screen size */
+  /* On large screens (lg), 4 columns (12/4=3), on medium (md), 2 columns (12/6=2), on small (12), 1 column */
+}
+
+.project-card {
+  height: 100%; /* Ensure cards in a row have same height */
+  display: flex;
+  flex-direction: column;
+  border: 4px solid #4a0e4a; /* Darker purple border */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 10px #810081; /* More prominent shadow */
+  background-color: #810081; /* Changed to #810081 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  /* --- NEW: Make cards smaller --- */
+  width: 100%; /* Ensure it takes full width of its column */
+  max-width: 320px; /* Set a maximum width for the card itself */
+  margin: 0 auto; /* Center the card within its grid column */
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+}
+
+.project-image {
+  width: 100%;
+  height: 200px; /* Fixed height to create a square-like top section */
+  object-fit: cover; /* This will crop the image to fit the 200px height, making it appear square-ish */
+}
+
+.p-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f0f0f0; /* Lighter text for titles */
+  margin-top: 15px;
+  margin-bottom: 5px;
+  padding: 0 15px; /* Add horizontal padding to title */
+}
+
+.p-card-subtitle {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  padding: 0 15px; /* Add horizontal padding to subtitle */
+}
+
+.project-description {
+  color: #c0c0c0;
+  font-size: 1rem;
+  line-height: 1.5;
+  flex-grow: 1; /* Allow description to take up available space */
+  margin-bottom: 20px;
+  padding: 0 15px; /* Add horizontal padding to description */
+}
+
+.project-links {
+  display: flex;
+  justify-content: space-around; /* Distribute buttons */
+  width: 100%;
+  padding-top: 15px;
+  border-top: 1px solid #810081;
+  padding-left: 15px; /* Add horizontal padding to links container */
+  padding-right: 15px; /* Add horizontal padding to links container */
+}
+
+.project-button {
+  flex: 1; /* Buttons take equal width */
+  margin: 0 5px; /* Small space between buttons */
+  background-color: #5d005d; /* Slightly darker purple for buttons on the #810081 card */
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.project-button.p-button-secondary {
+  background-color: #3a003a; /* Even darker shade for secondary button on the #810081 card */
+}
+
+.project-button:hover {
+  background-color: #4a004a; /* Darker purple on hover */
+}
+
+.project-button.p-button-secondary:hover {
+  background-color: #2b002b; /* Even darker secondary on hover */
+}
+
+/* PrimeIcons styling for buttons */
+.p-button-icon {
+  margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .projects-container {
+    padding: 20px 10px;
+  }
+  .projects-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  .project-card {
+    margin-bottom: 20px; /* Space between cards on small screens */
+  }
+  .project-links {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+  }
+  .project-button {
+    margin: 5px 0; /* Space between stacked buttons */
+  }
+}

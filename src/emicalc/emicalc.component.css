@@ -1,209 +1,294 @@
-:host {
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #181818; /* Consistent deep dark background */
+  color: #e0e0e0; /* Light text for contrast */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
+  overflow-x: hidden;
 }
 
-/* === Layout === */
-.emi-calculator-container {
+.emi-container {
+  width: 100%;
+  max-width: 1200px; /* Limit overall container width on large screens */
+  padding: 20px; /* Adjusted overall padding for better mobile spacing */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0 auto; /* Center the container */
+}
+
+/* Main calculator card (Input and Summary) */
+.emi-main-card {
+  width: 100%;
+  border: 4px solid #4a0e4a; /* Darker purple border */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  background-color: #1f1f2e; /* Slightly lighter dark background for card */
+  margin-bottom: 20px;
+}
+
+/* PrimeFlex grid adjustments for full page */
+.p-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
+}
+
+/* Base column padding and responsiveness */
+.p-col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding: 0; /* Remove default PrimeFlex padding within sections */
+}
+
+.p-md-4 {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+}
+
+.p-md-8 {
+  flex: 0 0 66.6667%;
+  max-width: 66.6667%;
+}
+
+.emi-input-section {
+  padding: 30px; /* Adjusted padding for better mobile fit */
+  background-color: #1f1f2e; /* Consistent with main card background */
+  border-bottom: 4px solid #4a0e4a; /* Border for mobile stacking */
   box-sizing: border-box;
-  align-items: flex-start;
 }
 
-.main-content {
-  flex: 1;
-  min-width: 380px;
+@media (min-width: 768px) {
+  .emi-input-section {
+    border-right: 4px solid #4a0e4a; /* Border for desktop split */
+    border-bottom: none; /* Remove bottom border on desktop */
+    padding: 40px 60px; /* Larger padding for desktop */
+  }
 }
 
-.graph-section {
-  flex: 2;
-  min-width: 500px;
-}
-
-/* === Card Styles === */
-.emi-card {
-  background-color: #1a1a1a;
-  color: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+.emi-output-section {
+  padding: 30px; /* Adjusted padding */
+  background-color: #1f1f2e; /* Consistent with main card background */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  justify-content: space-between;
 }
 
-mat-card-title {
-  font-size: 2.25rem;
-  font-weight: 700;
+@media (min-width: 768px) {
+  .emi-output-section {
+    padding: 40px 60px; /* Larger padding for desktop */
+  }
+}
+
+.emi-section-title {
+  font-size: 1.6rem; /* Slightly smaller title for mobile, adjusts with viewport */
+  font-weight: bold;
+  color: #f0f0f0;
+  margin-bottom: 25px; /* Adjusted margin */
+  padding-bottom: 12px;
+  border-bottom: 1px solid #444466;
+}
+
+.chart-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-/* === Form Inputs === */
-.input-section mat-form-field {
-  width: 100%;
-  margin-bottom: 20px;
+/* Form fields */
+.p-field {
+  margin-bottom: 20px; /* Adjusted space between fields */
 }
 
-.mat-mdc-form-field-outline {
-  color: #555;
-}
-.mat-mdc-form-field-outline-thick {
-  color: #64b5f6;
-}
-.mat-mdc-floating-label {
-  color: #ccc;
-}
-.mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
-  color: #64b5f6;
-}
-.mat-mdc-input-element {
-  color: #fff;
-}
-.mat-mdc-form-field-error {
-  color: #ff8a80;
-  font-size: 0.85rem;
-}
-
-/* === Button === */
-.calculate-button {
-  height: 55px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border-radius: 10px;
-  background: linear-gradient(45deg, #64b5f6, #42a5f5);
-  color: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  margin-top: 20px;
-  width: 100%;
-}
-.calculate-button:hover:not([disabled]) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(100, 181, 246, 0.4);
-}
-.calculate-button[disabled] {
-  background: #333;
-  color: #888;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* === Results Section === */
-.results-section {
-  background-color: #2a2a2a;
-  border-radius: 10px;
-  padding: 25px;
-  margin-top: 30px;
-  text-align: center;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #3a3a3a;
-}
-.results-section h2 {
-  font-size: 1.8rem;
+.p-field label {
+  display: block;
+  color: #c0c0c0;
   font-weight: 600;
-  margin-bottom: 20px;
-}
-.result-box {
-  padding: 20px 0;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #444;
-}
-.result-box span:first-child {
-  font-size: 4.5rem;
-  font-weight: 800;
-  color: #64b5f6;
-  line-height: 1;
-}
-.result-box span:last-child {
-  font-size: 1.2rem;
-  color: #ccc;
-  margin-top: 5px;
+  margin-bottom: 8px;
+  font-size: 1rem; /* Adjusted label font size */
 }
 
-/* === Detail Summary === */
-.summary-details {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+/* PrimeNG InputNumber and InputText styling */
+/* The PrimeNG components already have some default styling.
+   We'll override with our dark theme specifics. */
+.p-inputnumber .p-inputtext,
+.p-inputtext {
+  width: 100%; /* Ensure inputs take full width of their container */
+  padding: 12px 15px; /* Adjusted padding */
+  border: 1px solid #555577;
+  border-radius: 6px;
+  font-size: 1.1rem; /* Adjusted font size */
+  background-color: #3a3a5a;
+  color: #e0e0e0;
 }
-.detail-item {
+
+.p-inputnumber .p-inputtext:focus,
+.p-inputtext:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #9c27b0;
+  border-color: #9c27b0;
+}
+
+/* Remove spin buttons for number inputs */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* PrimeNG Slider styling */
+.p-slider .p-slider-handle {
+  border: 2px solid #9c27b0;
+  background-color: #9c27b0;
+  border-radius: 50%;
+  width: 20px; /* Slightly smaller slider handle for mobile */
+  height: 20px;
+  top: -7px; /* Adjust position */
+}
+
+.p-slider .p-slider-range {
+  background-color: #9c27b0;
+}
+
+.p-error {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin-top: 5px; /* Adjusted margin */
+  display: block;
+}
+
+/* EMI Result Display */
+.emi-result-display {
+  text-align: center;
+  margin-bottom: 30px; /* Adjusted margin */
+  background-color: #3a3a5a;
+  padding: 25px; /* Adjusted padding */
+  border-radius: 8px;
+  border: 1px solid #4a4a66;
+}
+
+.emi-label {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-bottom: 6px;
+}
+
+.emi-value {
+  font-size: 3.5rem; /* Adjusted EMI value size for responsiveness */
+  font-weight: 800;
+  color: #d156d1;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.emi-note {
+  font-size: 0.9rem;
+  color: #909090;
+}
+
+/* Summary Details */
+.emi-summary-details {
+  padding-top: 25px;
+  border-top: 1px solid #444466;
+  margin-bottom: 0;
+}
+
+.emi-summary-item {
   display: flex;
   justify-content: space-between;
-  font-size: 1.15rem;
-  padding: 8px 0;
-  border-bottom: 1px dashed #333;
-}
-.detail-item:last-child {
-  border-bottom: none;
-}
-.detail-label {
-  color: #bbb;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 1rem;
+  color: #c0c0c0;
   font-weight: 500;
 }
-.detail-value {
-  color: #fff;
-  font-weight: 600;
-}
-.results-section p.text-xs {
-  color: #888;
-  margin-top: 20px;
+
+.emi-total-amount {
+  color: #69f0ae;
+  font-weight: 700;
 }
 
-/* === Graph === */
-.graph-container {
-  background-color: #1a1a1a;
-  border-radius: 8px;
-  height: 450px;
+.emi-total-interest {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+/* Separate Graph Card */
+.emi-graph-card {
+  width: 100%;
+  border: 4px solid #4a0e4a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  background-color: #1f1f2e; /* Consistent with main card background */
+  padding: 30px; /* Adjusted padding for graph card content */
+  box-sizing: border-box;
+}
+
+/* Chart Container */
+.emi-chart-container {
+  height: 400px; /* Adjusted chart height for better mobile fit */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  width: 100%;
 }
 
-/* === Responsive === */
-@media (max-width: 992px) {
-  .emi-calculator-container {
-    flex-direction: column;
-    gap: 25px;
-    padding: 15px;
-  }
-  .graph-container {
-    height: 350px;
-  }
+canvas {
+  max-width: 100%;
+  max-height: 100%;
 }
 
-@media (max-width: 576px) {
-  .emi-card {
-    padding: 15px;
-  }
-  mat-card-title {
-    font-size: 1.7rem;
-  }
-  .results-section h2 {
-    font-size: 1.4rem;
-  }
-  .result-box span:first-child {
-    font-size: 3rem;
-  }
-  .result-box span:last-child {
-    font-size: 1rem;
-  }
-  .detail-item {
-    font-size: 0.95rem;
-  }
-  .graph-container {
-    height: 300px;
-  }
+
+/* Button styling - using PrimeNG's p-button class */
+.p-button {
+  background-color: #810081; /* Main button color */
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 12px 20px; /* Adjusted padding */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make button full width of its container */
+  font-size: 1.1rem; /* Adjusted font size */
 }
+
+.p-button:hover {
+  background-color: #660066; /* Darker purple on hover */
+}
+
+.p-button:disabled {
+  background-color: #555555; /* Darker disabled background */
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Chart.js labels/titles color for dark theme */
+/* This might need direct configuration within the chart options in TS */
+/* Example:
+  scales: {
+    x: {
+      ticks: { color: '#e0e0e0' },
+      title: { display: true, text: 'Year', color: '#e0e0e0' },
+      grid: { color: 'rgba(255, 255, 255, 0.1)' }
+    },
+    y: {
+      ticks: { color: '#e0e0e0' },
+      title: { display: true, text: 'Remaining Principal (₹)', color: '#e0e0e0' },
+      grid: { color: 'rgba(255, 255, 255, 0.1)' }
+    }
+  }
+*/

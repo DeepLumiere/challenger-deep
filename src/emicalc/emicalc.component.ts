@@ -1,42 +1,42 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, ViewChild, ElementRef, AfterViewInit, OnInit} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf
 
-// Angular Material Imports
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSliderModule } from '@angular/material/slider';
 
 // Chart.js Imports
 import { Chart, registerables } from 'chart.js';
+import {CardModule} from 'primeng/card'; // Changed from Card to CardModule
+import {InputTextModule} from 'primeng/inputtext'; // Changed from InputText to InputTextModule
+import {ButtonModule} from 'primeng/button'; // Changed from ButtonDirective to ButtonModule
+import { SliderModule } from 'primeng/slider'; // Import SliderModule
+import { InputNumberModule } from 'primeng/inputnumber'; // Import InputNumberModule
+
 
 @Component({
   selector: 'app-emicalc',
   standalone: true, // Use standalone components
   imports: [
     ReactiveFormsModule,
-    CommonModule, // Needed for directives like ngIf
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSliderModule
+    CommonModule,
+    CardModule, // Use CardModule
+    InputTextModule, // Use InputTextModule
+    ButtonModule, // Use ButtonModule
+    SliderModule, // Add SliderModule
+    InputNumberModule // Add InputNumberModule
   ],
   templateUrl: './emicalc.component.html',
   styleUrl: './emicalc.component.css'
 })
 
-export class EmicalcComponent implements AfterViewInit {
+export class EmicalcComponent implements OnInit, AfterViewInit { // Implement AfterViewInit
   // ViewChild to get a reference to the canvas element
   @ViewChild('amortizationChart') chartCanvas!: ElementRef;
   public chart: Chart | undefined; // Chart.js instance
 
   emiForm: FormGroup = new FormGroup({
-    principal: new FormControl(null, [Validators.required, Validators.min(1)]),
-    interest: new FormControl(null, [Validators.required, Validators.min(0.01)]),
-    years: new FormControl(1, [Validators.required, Validators.min(1)]) // Default to 1 year
+    principal: new FormControl(2500000, [Validators.required, Validators.min(1)]), // Added default value
+    interest: new FormControl(8.5, [Validators.required, Validators.min(0.01)]), // Added default value
+    years: new FormControl(15, [Validators.required, Validators.min(1)]) // Default to 1 year, added default value
   });
 
   emiResult: number | null = null;
@@ -48,10 +48,20 @@ export class EmicalcComponent implements AfterViewInit {
     // Register Chart.js components globally once
     Chart.register(...registerables);
 
-    // Watch for changes in years slider to update immediately if needed
-    this.emiForm.controls['years'].valueChanges.subscribe(() => {
+    // Watch for changes in all form controls to update immediately
+    this.emiForm.valueChanges.subscribe(() => {
       if (this.emiForm.valid) {
         this.calculate();
+      } else {
+        // Optionally clear results and chart if form becomes invalid
+        this.emiResult = null;
+        this.totalAmountPaid = null;
+        this.totalInterest = null;
+        this.graphData = [];
+        if (this.chart) {
+          this.chart.destroy();
+          this.chart = undefined;
+        }
       }
     });
   }
@@ -155,44 +165,29 @@ export class EmicalcComponent implements AfterViewInit {
     }
 
     this.chart = new Chart(ctx, {
-      type: 'line', // Line chart for amortization
+      type: 'line',
       data: {
-        labels: this.graphData.map(data => data.year === 0 ? 'Start' : `${data.year} Years`), // X-axis labels (Years)
+        labels: this.graphData.map(data => `${data.year} yr`),
         datasets: [{
           label: 'Remaining Principal',
-          data: this.graphData.map(data => data.remainingPrincipal), // Y-axis data (Remaining Principal)
-          borderColor: '#64b5f6', // Light blue line color
-          backgroundColor: 'rgba(100, 181, 246, 0.2)', // Light blue fill color
+          data: this.graphData.map(data => data.remainingPrincipal),
+          borderColor: '#d156d1', // Brighter purple for the line
+          backgroundColor: 'rgba(126, 91, 239, 0.2)', // Slightly more transparent dark background
           fill: true,
-          tension: 0.3, // Smooth the line
-          pointBackgroundColor: '#64b5f6',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: '#64b5f6',
+          tension: 0.4,
+          pointRadius: 0
         }]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Allow canvas to resize freely
+        maintainAspectRatio: false, // Allow chart to adjust height dynamically
         plugins: {
           legend: {
-            display: true,
-            labels: {
-              color: '#fff' // White legend text
-            }
+            display: false
           },
           tooltip: {
             callbacks: {
-              label: function(context) { // Removed explicit type annotation here
-                let label = context.dataset.label || '';
-                if (label) {
-                  label += ': ';
-                }
-                if (context.parsed.y !== null) {
-                  label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                }
-                return label;
-              }
+              label: context => `₹${context.parsed.y.toFixed(2)}`
             }
           }
         },
@@ -200,34 +195,35 @@ export class EmicalcComponent implements AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Time (Years)',
-              color: '#fff' // White X-axis title
-            },
-            ticks: {
-              color: '#ccc' // Light gray X-axis tick labels
+              text: 'Year',
+              color: '#e0e0e0' // White text for x-axis title
             },
             grid: {
-              color: '#333' // Darker grid lines
+              display: false, // Removed grid lines for a cleaner look
+              color: 'rgba(255, 255, 255, 0.05)' // Very subtle grid lines if needed
+            },
+            ticks: {
+              color: '#e0e0e0' // White text for x-axis labels
             }
           },
           y: {
             title: {
               display: true,
-              text: 'Principal Amount ($)',
-              color: '#fff' // White Y-axis title
-            },
-            ticks: {
-              color: '#ccc', // Light gray Y-axis tick labels
-              callback: function(value) {
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value as number);
-              }
+              text: 'Remaining Principal (₹)',
+              color: '#e0e0e0' // White text for y-axis title
             },
             grid: {
-              color: '#333' // Darker grid lines
+              color: 'rgba(255, 255, 255, 0.1)' // Lighter grid lines
+            },
+            ticks: {
+              color: '#e0e0e0' // White text for y-axis labels
             }
           }
         }
       }
     });
+  }
+
+  ngOnInit(): void {
   }
 }

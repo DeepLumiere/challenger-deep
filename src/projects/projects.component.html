@@ -1,1 +1,32 @@
-<p>Projects here!</p>
+<div class="projects-container">
+  <h1 class="projects-title">My Projects</h1>
+
+  <div class="p-grid p-jc-center p-nogutter">
+    <div class="p-col-12 p-md-6 p-lg-4" *ngFor="let project of projects">
+      <p-card styleClass="project-card">
+        <ng-template pTemplate="header">
+          <img [src]="project.image" [alt]="project.title" class="project-image" />
+        </ng-template>
+        <ng-template pTemplate="title">
+          {{ project.title }}
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+          Project Showcase
+        </ng-template>
+        <p class="project-description">
+          {{ project.description }}
+        </p>
+        <ng-template pTemplate="footer">
+          <div class="flex gap-4 mt-1 project-links">
+            <a *ngIf="project.githubLink" [href]="project.githubLink" target="_blank" rel="noopener noreferrer">
+              <p-button label="GitHub" icon="pi pi-github" severity="secondary" styleClass="w-full project-button" />
+            </a>
+            <a *ngIf="project.liveLink" [href]="project.liveLink" target="_blank" rel="noopener noreferrer">
+              <p-button label="Live Demo" icon="pi pi-external-link" styleClass="w-full project-button" />
+            </a>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+</div>

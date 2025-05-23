@@ -1,8 +1,0 @@
-.footer-toolbar {
-  display: flex;
-  justify-content: center;       /* Center content horizontally */
-  align-items: center;           /* Center content vertically */
-  text-align: center;
-  font-size: 15px;               /* Smaller text */
-  padding: 8px 16px;             /* Optional padding */
-}
